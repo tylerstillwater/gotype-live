@@ -23,7 +23,6 @@ import (
 var (
 	// main operation modes
 	liveFile  = flag.String("lf", "", "uses file data from stdin in place of named file on disk")
-	mode      = flag.String("m", "go", `package lookup mode ("go" or "gb")`)
 	allFiles  = flag.Bool("a", false, "use all (incl. _test.go) files when processing a directory")
 	allErrors = flag.Bool("e", false, "report all errors (not just the first 10)")
 	verbose   = flag.Bool("v", false, "verbose mode")
