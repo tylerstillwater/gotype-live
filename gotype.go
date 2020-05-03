@@ -22,11 +22,11 @@ import (
 
 var (
 	// main operation modes
-	liveFile  = flag.String("lf", "", "uses file data from stdin in place of named file on disk")
-	allFiles  = flag.Bool("a", false, "use all (incl. _test.go) files when processing a directory")
-	allErrors = flag.Bool("e", false, "report all errors (not just the first 10)")
-	verbose   = flag.Bool("v", false, "verbose mode")
-	gccgo     = flag.Bool("gccgo", false, "use gccgoimporter instead of gcimporter")
+	liveFile     = flag.String("lf", "", "uses file data from stdin in place of named file on disk")
+	allFiles     = flag.Bool("a", false, "use all (incl. _test.go) files when processing a directory")
+	allErrors    = flag.Bool("e", false, "report all errors (not just the first 10)")
+	verbose      = flag.Bool("v", false, "verbose mode")
+	importerType = flag.String("i", "source", "importer type (source, gc, gccgo)")
 
 	// debugging support
 	sequential    = flag.Bool("seq", false, "parse sequentially, rather than in parallel")
@@ -221,10 +221,6 @@ func getPkgFiles(args []string) (files, xfiles []*ast.File, err error) {
 }
 
 func checkPkgFiles(files []*ast.File) {
-	compiler := "gc"
-	if *gccgo {
-		compiler = "gccgo"
-	}
 	type bailout struct{}
 	conf := types.Config{
 		FakeImportC: true,
@@ -234,7 +230,7 @@ func checkPkgFiles(files []*ast.File) {
 			}
 			report(err)
 		},
-		Importer: importer.For(compiler, nil),
+		Importer: importer.For(*importerType, nil),
 		Sizes:    sizes,
 	}
 
